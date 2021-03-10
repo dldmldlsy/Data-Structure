@@ -1,6 +1,8 @@
-//Problem W1_P2 : DS21_Week1_P2_F (퀴즈 2번문제는 W1_P4)
-//첫주차 퀴즈 2번째 문제 변형 (퀴즈때 못풂) 
-// 3/6
+//////Problem W1_P2 : DS21_Week1_P2_F (퀴즈 2번문제는 W1_P4)
+//////첫주차 퀴즈 2번째 문제 변형 (퀴즈때 못풂) 
+////// 3/6
+///// 3/10 성공! 
+
 
 #include<iostream>
 using namespace std;
