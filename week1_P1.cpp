@@ -40,6 +40,7 @@ public:
 
 	void set(int idx, int value) {
 		arr[idx] = value;
+		cout << value << endl;
 	}
 
 	void print() {
