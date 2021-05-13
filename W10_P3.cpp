@@ -1,3 +1,5 @@
+//자료구조 10주차 실습 3번 (최소힙) 
+//correct!
 #include<iostream>
 #include<string>
 #include<vector>
@@ -79,12 +81,17 @@ public:
 		v[root_index] = v[heap_size];
 		heap_size--;
 		v.pop_back();
-		upHeap(root_index);
+		downHeap(root_index);
 		return top;
 
 	}
 
-	int top() { return v[root_index]; }
+	int top() { 
+		if (isEmpty()) {
+			return -1;
+		}
+		return v[root_index];
+	}
 	int size() {
 		return heap_size;
 	}
@@ -96,10 +103,10 @@ public:
 			return;
 		}
 		else {
-			for (int i = 0; i < heap_size; i++) {
+			for (int i = 1; i <= heap_size; i++) {
 				cout << v[i] << " ";
 			}
-			cout << endl;
+			cout<< endl;
 
 		}
 	}
