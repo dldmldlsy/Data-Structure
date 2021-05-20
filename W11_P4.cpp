@@ -1,3 +1,6 @@
+//자료구조 11주차 실습 4번
+//BST+depth  remove()어려움 ㅜㅜ
+//correct! 
 #include<iostream>
 using namespace std;
 class Node {
@@ -42,7 +45,7 @@ public:
 		this->root = NULL;
 	}
 	Node* search(int data) { //탐색연산 (찾으려는 노드가 있으면 그 노드를 리턴)
-		Node* curN = this->root; 
+		Node* curN = this->root;
 		while (curN != NULL) {
 			if (curN->data == data) {
 				return curN;
@@ -77,12 +80,25 @@ public:
 		if (data > parN->data) parN->setRight(node);
 		else if (data < parN->data) parN->setLeft(node);
 	}
-	
+
 	void remove(int data) {  //삭제연산 
 		Node* node = this->search(data); //삭제할 노드찾기
 		Node* parN = node->par; //삭제할 노드의 부모노드도 찾기
 
-		if (node->left == NULL && node->right == NULL) { //삭제할 노드의 자식이 null=삭제할 노드가 외부노드인 경우
+		//삭제할 노드가 루트면!!!! 
+		if (node == root) {
+			if (root->right == NULL) {
+				root = root->left;
+			}
+			else {
+				root = root->right;
+			}
+			delete node;
+			return;
+		}
+
+		//삭제할 노드의 자식이 모두 null인 경우
+		if (node->left == NULL && node->right == NULL) { 
 			if (parN->left == node) {
 				parN->left = NULL;
 			}
@@ -90,9 +106,9 @@ public:
 				parN->right = NULL;
 			}
 			delete node;
-
 		}
-		else if (node->left == NULL && node->right != NULL)  {//삭제할 노드가 오른쪽자식만 있을 경우
+		//삭제할 노드가 오른쪽자식만 있을 경우
+		else if (node->left == NULL && node->right != NULL) {
 			if (parN->left == node) {
 				parN->left = node->right;
 				node->right->par = parN;
@@ -104,7 +120,8 @@ public:
 			delete node;
 
 		}
-		else if (node->left != NULL && node->right == NULL) { //삭제할 노드가 왼쪽 자식만 있을 경우
+		//삭제할 노드가 왼쪽 자식만 있을 경우
+		else if (node->left != NULL && node->right == NULL) { 
 			if (parN->left == node) {
 				parN->left = node->left;
 				node->left->par = parN;
@@ -116,26 +133,46 @@ public:
 			delete node;
 
 		}
-		else { //삭제할 노드가 내부노드일 경우 
+		else { //삭제할 노드의 두 자식이 모두 내부노드일 경우 
 
 			Node* temp = node->right;
-			
+
 			while (temp->left != NULL) {
 				temp = temp->left;
-			}
-			int x = node->data;
-			node->data = temp->data;
-			temp->data = x;
-			if (temp->right != NULL) {
-				temp->par->left = temp->right;
-			}
-				temp = NULL;
-			}
+			} //temp=석세서
 
+			int x = node->data;
+			node->data = temp->data; //원래 삭제할 노드에 석세서값 덮어씌우기
+			temp->data = x; //석세서에 삭제할 값 덮어씌우기, 이제 이 석세서를 삭제하는 거!
+
+			//석세서의 왼쪽은 무조건 NULL이므로 오른쪽만 확인하면 됨. 
+			if (temp->right != NULL) {
+				if (temp->par == node) //석세서의 부모가 삭제할 노드일 경우
+				{
+					node->right = temp->right;
+					temp->right->par = node;
+				}
+				else
+				{
+					temp->par->left = temp->right;
+					temp->right->par = temp->par;
+				}
+			}
+			else { //석세서 자식이 없으면 석세서자리 null로 바꿔주깅. 
+				if (temp->par == node) {
+					node->right = NULL;
+				}
+				else {
+					temp->par->left = NULL;
+				}
+			}
+			temp = NULL;
 		}
+
+	}
 	int depth(int data) {
-		Node* node = this->search(data); 
-		int dep = 0; 
+		Node* node = this->search(data);
+		int dep = 0;
 		while (node != root) {
 			node = node->par;
 			dep++;

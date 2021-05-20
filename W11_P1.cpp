@@ -1,6 +1,6 @@
 //자료구조실습 11주차 1번 
 //이진탐색트리 생성 후 m번째 작은 값출력
- 
+
 #include<iostream>
 #include<vector>
 using namespace std;
@@ -84,7 +84,7 @@ public:
 	}
 
 	void inorder(Node* node) {
-		if (node==NULL) return; //이거 빼먹지말기!
+		if (node == NULL) return; //이거 빼먹지말기!
 		inorder(node->left);
 		v.push_back(node->data);
 		inorder(node->right);
@@ -108,6 +108,6 @@ int main() {
 		}
 		cin >> M;
 		tree.inorder(tree.root);
-		cout<<tree.printM(M) << endl;
+		cout << tree.printM(M) << endl;
 	}
 }
