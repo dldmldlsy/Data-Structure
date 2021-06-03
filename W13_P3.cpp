@@ -51,7 +51,7 @@ public:
 		new_vertex->prev = trailer->prev; 
 		new_vertex->next = trailer;
 		
-		new_vertex->matrix_id = new_vertex->matrix_id + 1; //이러면 다 -1+1=0이되는 거 아닌가. 
+	    new_vertex->matrix_id = new_vertex->prev->matrix_id + 1; 
 		
 		//이것도 구성 마저
 		trailer->prev->next = new_vertex;
@@ -170,7 +170,6 @@ public:
 				if (i < del_idx && j < del_idx) new_matrix[i][j] = edge_matrix[i][j];
 				else if (i < del_idx) new_matrix[i][j] =   edge_matrix[i][j + 1];
 				else if (j < del_idx)new_matrix[i][j] = edge_matrix[i + 1][j];
-				//
 				else new_matrix[i][j] = edge_matrix[i + 1][j + 1];
 			}
 		}
@@ -189,7 +188,7 @@ public:
 		return;
 	}
 
-	void insertEdges(int src_vertex_id, int dst_vertex_id) {//간선 삽입. 
+	void insertEdge(int src_vertex_id, int dst_vertex_id) {//간선 삽입. 
 		vertex* src_vertex = vertex_list.find_vertex(src_vertex_id);
 		vertex* dst_vertex = vertex_list.find_vertex(dst_vertex_id);
 		if (src_vertex == NULL || dst_vertex == NULL) return;
@@ -199,7 +198,7 @@ public:
 			cout << "Exist" << endl;
 			return;
 		}
-		edge* new_edge = new edge(src_vertex, dst_vertex);
+		edge* new_edge = new edge(src_vertex, dst_vertex); //새 간선 생성.
 		edge_list.insert_back(new_edge);
 		edge_matrix[src_id][dst_id] = edge_matrix[dst_id][src_id] = new_edge;
 		return;
@@ -210,18 +209,28 @@ public:
 		vertex* dst_vertex = vertex_list.find_vertex(dst_vertex_id);
 
 		if (src_vertex == NULL || dst_vertex == NULL) return;
-
 		int src_id = src_vertex->matrix_id;
 		int dst_id = dst_vertex->matrix_id;
-
 		if (edge_matrix[src_id][dst_id] == NULL || edge_matrix[dst_id][src_id] == NULL){
 			cout << "None" << endl;
 			return; //간선이 존재하지 않음
 		}
-
 		edge_list.remove(edge_matrix[src_id][dst_id]);
 		edge_matrix[src_id][dst_id] = edge_matrix[dst_id][src_id] = NULL;
 		return;
+	}
+
+	void incidentEdges(int vertex_id) {
+		if (vertex_list.find_vertex(vertex_id) == NULL) return;
+		vertex* _vertex = vertex_list.find_vertex(vertex_id);
+		int count = 0;
+		int m_num = _vertex->matrix_id;
+		for (int i = 0; i < vertex_size; i++) {
+			if (edge_matrix[m_num][i] != NULL) {
+				count++;
+			}
+		}
+		cout << count << endl;
 	}
 
 };
@@ -240,11 +249,15 @@ int main() {
 		cin >> oper;
 		if (oper == "insertEdge") {
 			cin >> s >> d;
-			g.insertEdges(s, d);
+			g.insertEdge(s, d);
 		}
 		else if (oper == "eraseEdge") {
 			cin >> s >> d;
 			g.eraseEdge(s, d);
+		}
+		else if (oper == "incidentEdges") {
+			cin >> s;
+			g.incidentEdges(s);
 		}
 		else {
 			cout << "다시" << endl;
