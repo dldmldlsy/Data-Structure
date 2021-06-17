@@ -1,3 +1,6 @@
+//자료구조 13주차 실습 3번
+//incidentEdges() 구현 
+//correct!
 #include<iostream>
 using namespace std;
 struct vertex {

@@ -1,113 +1,87 @@
 //자료구조실습 11주차 1번 
 //이진탐색트리 생성 후 m번째 작은 값출력
-
 #include<iostream>
-#include<vector>
 using namespace std;
+
 class Node {
 private:
 	int data;
 	Node* par;
 	Node* left;
 	Node* right;
-
-public: Node(int data) {
-	this->data = data;
-	this->par = NULL;
-	this->left = NULL;
-	this->right = NULL;
-}
-	  void setLeft(Node* node) {
-		  if (node == NULL) {
-			  this->left = NULL;
-		  }
-		  else {
-			  this->left = node;
-			  node->par = this; //이해가 좀 안가넴 ..흠 
-		  }
-	  }
-	  void setRight(Node* node) {
-		  if (node == NULL) {
-			  this->right = NULL;
-		  }
-		  else {
-			  this->right = node;
-			  node->par = this;
-		  }
-	  }
-
-	  friend class BST;
+public:
+	Node(int data) {
+		this->data = data;
+		this->par = NULL;
+		this->left = NULL;
+		this->right = NULL;
+	}
+	void setLeft(Node* node) {
+		if (node == NULL) { this->left = NULL; }
+		else {	this->left = node; node->par = this;}
+	}
+	void setRight(Node* node) {
+		if (node == NULL) { this->right = NULL; }
+		else{this->right = node; node->par = this;}
+	}
+	friend class BST;
 };
-
 class BST {
 public:
 	Node* root;
-	vector<int> v;
+public:
 	BST() {
 		this->root = NULL;
 	}
-	Node* search(int data) { //탐색연산 (찾으려는 노드가 있으면 그 노드를 리턴)
+	Node* search(int data) {
 		Node* curN = this->root;
 		while (curN != NULL) {
-			if (curN->data == data) {
+			if (data == curN->data) {
 				return curN;
-			}
-			else if (data > curN->data) curN = curN->right;
-			else curN = curN->left;
-		}
-		return NULL;
-	}
-	void insert(int data) { //삽입연산
-		Node* node = new Node(data); //삽입할 노드
-		if (this->root == NULL) { //빈 트리일 경우
-			this->root = node; //루트에 삽입하고
-			return; //함수종료
-		}
-
-		//삽입해야할 위치찾기
-		Node* parN = NULL;
-		Node* curN = this->root;
-
-		while (curN != NULL) {
-			if (curN->data < data) {
-				parN = curN;
+			}else if (data > curN->data) {
 				curN = curN->right;
 			}
 			else {
-				parN = curN;
 				curN = curN->left;
 			}
 		}
-		//찾은 위치에 삽입
-		if (data > parN->data) parN->setRight(node);
-		else if (data < parN->data) parN->setLeft(node);
+		return NULL;
 	}
+	void insert(int data) {
+		Node* node = new Node(data);
+		if (this->root == NULL) {this->root = node; return;}
 
-	void inorder(Node* node) {
-		if (node == NULL) return; //이거 빼먹지말기!
-		inorder(node->left);
-		v.push_back(node->data);
-		inorder(node->right);
+		Node* parN = NULL;
+		Node* curN = this->root;
+		while (curN != NULL) {
+			if (data > curN->data) {
+				parN = curN; curN = curN->right;
+			}
+			else { parN = curN; curN = curN->left; }
+		}
+		if (data > parN->data) { parN->setRight(node); }
+		else if (data < parN->data) { parN->setLeft(node); }
 	}
-	int printM(int m) {
-		int res = v[m - 1];
-		return res;
+	int min= 0;
+	void solution(Node* node, int num) {
+		if (node == NULL) return;
+		solution(node->left, num);
+		min++;
+		if (min == num) { cout << node->data << endl; return; }
+		solution(node->right, num);
 	}
 };
 int main() {
-	int T;
-	cin >> T;
-	int N, M;
-	for (int i = 0; i < T; i++) {
-		BST tree;
-		cin >> N;
-		int x;
-		for (int j = 0; j < N; j++) {
-			cin >> x;
-			tree.insert(x);
+	int t;
+	cin >> t;
+	int n;
+	int min_num;
+	for(int i = 0; i < t; i++) {
+		cin >> n; int x; BST bst;
+		for (int j = 0; j < n; j++) {
+			cin >> x; bst.insert(x);
 		}
-		cin >> M;
-		tree.inorder(tree.root);
-		cout << tree.printM(M) << endl;
+		cin>>min_num;
+		bst.solution(bst.root, min_num);
 	}
 }
